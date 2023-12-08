@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+<bean id ="m1" class="com.sp1.Message" init-method="init" destroy-method="destroy">
+<property name="msg" value="Welcome To Spring...."></property>
+</bean>
+
+<bean id="i1" class="com.sp1.Information" scope="prototype">
+</bean>
+
+<bean id="ph1" class="com.sp2.Phone">
+     <property name="phno" value="999999999"></property>
+</bean>
+<bean id="p1" class="com.sp2.Person">
+<property name="pname" value="Tops"></property>
+<property name="phone" ref="ph1"></property>
+</bean>
+
+<bean id="custimpl" class="com.sp5.CustomerImpl"></bean>
+<bean id="custowner" class="com.sp5.CustomerOwener"></bean>
+<bean id="internetadvice" class="com.sp5.InternetAdvice">
+		<property name="custowener" ref="custowner"></property>
+</bean>
+<bean id="customerproxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+       <property name="target">
+       <ref local="custimpl"/>
+       </property>
+       <property name="proxyInterfaces">
+       <value>com.sp5.Customer</value>
+       </property>
+       <property name="interceptorNames">
+       <list>
+       <value>CustomerAdvisor</value>
+       </list>
+       </property>
+</bean>
+
+<bean id="CustomerAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+ <property name="advice">
+ <ref local="internetadvice"/>
+ </property>
+  <property name="pattern">
+ <value>.*</value>
+ </property>
+</bean>
+
+
+</beans>
